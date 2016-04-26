@@ -19,10 +19,10 @@
     var i_log = 0;
 	var total = 0;
     var existe_db;
-	var db
-	var exite
-	var fua_cli
-	var fua_precios
+	var db;
+	var exite;
+	var fua_cli;
+	var fua_precios;
 	
 	var menuOpen = true;
     var menuDiv = "";
@@ -59,7 +59,7 @@ var app = {
 		*/
         console.log('Received Event: ' + id);
 		//alert('Comencé');
-		window.localStorage.setItem("total", total);
+
 		//window.localStorage.setItem("existe_db", 0);
 		onDeviceReadyNow();
     }
@@ -81,9 +81,10 @@ function mkLog(text){
 function onDeviceReadyNow(){
 	//window.notification.navigator.notification.alert('Arranco la App');
     mkLog("Ejecute el onDeviceReady--->");
+	window.localStorage.setItem("total", total);
 	
 	existe_db = window.localStorage.getItem("existe_db");	
-	
+	//existe_db = null;
 	db = window.openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
 	
 	if(existe_db == null){
@@ -93,41 +94,12 @@ function onDeviceReadyNow(){
 		mkLog("la BD está definida");
 		cargaDatos();
 	}
-
 	//Habilita la función del botón atrás.
 	document.addEventListener("backbutton", onBackKeyDown, false);	
-
 	//Habilita la función del botón menú.
-	document.addEventListener("menubutton", onMenuKeyDown, false);
-	
+	document.addEventListener("menubutton", onMenuKeyDown, false);	
 	//Depuro los pedidos para migrar
 	depuraIniDatos();
-
-
-    	//preparamos los elementos activos de la app
-	$("#btnGetCamera").click(function(e){
-	e.stopPropagation();
-		navigator.camera.getPicture( cameraSuccess, cameraError, { quality : 50,
-													destinationType : Camera.DestinationType.FILE_URI,
-													sourceType : Camera.PictureSourceType.CAMERA,
-													allowEdit : true,
-													encodingType: Camera.EncodingType.JPEG,
-																	saveToPhotoAlbum: true 
-	} );
-});
-			
-    $("#btnGetLibrary").click(function(e){
-	    e.stopPropagation();
-		    navigator.camera.getPicture( cameraSuccess, cameraError, { quality : 50,
-													    destinationType : Camera.DestinationType.FILE_URI,
-													    sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
-													    allowEdit : true,
-													    encodingType: Camera.EncodingType.JPEG,
-													    saveToPhotoAlbum: true 
-	    } );
-    });
-
-	
 }//Fin OnReadyDevice
 
 	$(document).ready(function(){
@@ -166,7 +138,7 @@ function onDeviceReadyNow(){
 						var fec_ult_act_cli = fua_cli;
 					}
 						$.getJSON("http://leocondori.com.ar/app/local/downloadclient.php", {ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave, fua_cliente: fec_ult_act_cli}, ItsDownloadClient, "json");
-					})
+					});
 		//FIN: Sincronizo clientes
 
 		//Sincronizo lista de precios:
@@ -192,6 +164,33 @@ function onDeviceReadyNow(){
 				});
 				
 
+
+		
+
+		function errorCB(err){
+			console.log("Error procesando SQL:" + err.code);
+			//navigator.notification.alert("Error procesando SQL:" + err.code);
+			//alert("Error procesando SQL:" + err.code + '-' + err.message);
+			navigator.notification.alert("Error procesando SQL:" + err.code + '-' + err.message, alertDismissed, 'Pedidos Mobile', 'Listo');
+		}
+
+		function errorCBart(err){
+			console.log("Error al procesar el SQL: " + err.code);
+			//navigator.notification.alert("Error procesando SQL:" + err.code);
+			//alert("Error procesando SQL:" + err.code + '-' + err.message);
+			navigator.notification.alert("Error procesando SQL:" + err.code + '-' + err.message, alertDismissed, 'Pedidos Mobile', 'Listo');
+		}		
+		
+		function successCB(){
+			mkLog("Dato insertado");
+			//navigator.notification.alert("Insertamos todos los datos con éxito");
+		}
+
+		function successCBs(total, count){
+		var total;
+		var count;
+		calculaPorcentaje(total, count); 
+		}
 
 		//********************INICIO DE FUNCIONES *************************		
 		//FUCIONES			
@@ -219,26 +218,21 @@ function onDeviceReadyNow(){
 
 				function ItsDownloadClient(Response){
 					if (Response.ItsLoginResult == 1){
-						console.log('Aca está la respuesta: ' + Response.ItsLoginResult);
 						$("#estadodown").html('');
 						navigator.notification.alert('Error : ' + Response.motivo, alertDismissed, 'Pedidos Mobile', 'Listo');
 					}else{
-						console.log('Aca está la respuesta: ' + Response.ItsLoginResult);
 							$("#estadodown").html('');
 							
 							$("#instala").show();
 							
 							if(Response.Cantidad != 0){
-
-							var db = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
-							db.transaction(crearEmpresa, errorCBart, successCB);
+							//var dbeee = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
+							db.transaction(crearEmpresa, errorCB, successCB);
 		function crearEmpresa(tx){													
-								for(var x=0; x<=Response.Data.length; x++) {
-										console.log('Esto es el ID: '+ Response.Data[x]["ID"]);
-										console.log('Esto es el DESC: '+ Response.Data[x]["DESCRIPCION"]);
-										console.log('Esto es el TE: '+ Response.Data[x]["TE"]);
-										console.log('Esto es el NUM_DOC: '+ Response.Data[x]["NUM_DOC"]);
-										tx.executeSql("INSERT INTO erp_empresas (id, descripcion, te, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["NUM_DOC"]+"') ");
+								for(var x=0; x<Response.Data.length; x++) {
+										  console.log("INSERT INTO erp_empresas (id, descripcion, te, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["NUM_DOC"]+"' ) ");
+										tx.executeSql("INSERT INTO erp_empresas (id, descripcion, te, saldo, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["SALDO"]+"', '"+Response.Data[x]["NUM_DOC"]+"') ");
+										//tx.executeSql("INSERT INTO erp_empresas (id, descripcion, te, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["NUM_DOC"]+"') ");
 									}
 								}
 								
@@ -251,7 +245,7 @@ function onDeviceReadyNow(){
 					if( confirm("No hay empresas nuevas para centralizar desde la última vez que se sincronizó, la fecha y hora es " + fua_cli + ". De todas maneras ¿Desea forzar la centralización? se perderán todas las empresas guardadas.") )
 					{
 					//Borro los datos de la tabla.
-					var db = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
+					//var db = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
 					db.transaction(function(tx) {
 					tx.executeSql("delete from erp_empresas");
 					}, errorCB, successCB);
@@ -279,8 +273,8 @@ function onDeviceReadyNow(){
 							$("#estadodown").hide();
 							$("#instala").show();
 		if(Response.Cantidad != 0){
-							var db = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
-							db.transaction(crearPrecios, errorCB, successCBs());
+							//var db = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
+							db.transaction(crearPrecios, errorCB, successCBs);
 		function crearPrecios(tx){
 								$("#progressbars").html('');
 								for(x=0; x<Response.Data.length; x++){
@@ -301,7 +295,7 @@ function onDeviceReadyNow(){
 
 		}else{
 					if(confirm("No hay precios nuevos o actualizados para centralizar desde la última vez que se sincronizó, la fecha y hora es " + fua_cli + ". De todas maneras ¿Desea forzar la centralización? se perderán todos los precios guardadas.") ){
-					var db = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
+					//var db = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
 					db.transaction(function(tx) {
 					tx.executeSql("delete from erp_pre_ven");
 					}, errorCB, successCB);
@@ -316,244 +310,7 @@ function onDeviceReadyNow(){
 					$("#instala").fadeOut(9000);
 							}
 					}
-				}		
-
-		function errorCB(err){
-			console.log("Error procesando SQL:" + err.code);
-			//navigator.notification.alert("Error procesando SQL:" + err.code);
-			//alert("Error procesando SQL:" + err.code + '-' + err.message);
-			navigator.notification.alert("Error procesando SQL:" + err.code + '-' + err.message, alertDismissed, 'Pedidos Mobile', 'Listo');
-		}
-
-		function errorCBart(err){
-			console.log("Error al procesar el SQL: " + err.code);
-			//navigator.notification.alert("Error procesando SQL:" + err.code);
-			//alert("Error procesando SQL:" + err.code + '-' + err.message);
-			navigator.notification.alert("Error procesando SQL:" + err.code + '-' + err.message, alertDismissed, 'Pedidos Mobile', 'Listo');
-		}		
-		
-		function successCB(){
-			mkLog("Dato insertado");
-			navigator.notification.alert("Insertamos todos los datos con éxito");
-		}
-
-		function successCBs(total, count){
-		var total;
-		var count;
-		calculaPorcentaje(total, count); 
-		}
-	$(document).ready(function(){
-
-				var WebService = window.localStorage.getItem("ws");
-					var BaseDeDatos = window.localStorage.getItem("bd");
-					var Usuario = window.localStorage.getItem("user");
-					var Clave = window.localStorage.getItem("password");
-					fua_cli = window.localStorage.getItem("fua_cli");
-					
-					$("#conexion").click(function(){
-						var url = 'http://iserver.itris.com.ar:3000/ITSWS/ItsCliSvrWS.asmx?WSDL';
-						var url = window.localStorage.getItem("ws");
-						$("#estado").show();
-						$.getJSON("http://leocondori.com.ar/app/local/testws.php", {ws: url, precio: 20}, resultConn, "json");
-						})
-					$("#testlogin").click(function(){
-					$("#estado").show();		
-						$.getJSON("http://leocondori.com.ar/app/local/itslogin.php", {ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave}, ItsLogin, "json");
-					})
-
-		//Sincronizo clientes:			
-					$("#clientesDown").click(function(){
-						console.log('Entramos al ClientDowload');
-					$("#estadodown").show();
-					$("#estadodown").html('<div class="progress">' +
-										  '<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"> ' +
-										  '<span class="sr-only">100% Complete</span>' +
-										  '</div>' +
-										  '</div>');
-					//Para la pimera ejecución, entonces controlo si está declarada o no.
-					fua_cli = window.localStorage.getItem("fua_cli");
-					if(!fua_cli){
-						var fec_ult_act_cli = '';
-					}else{
-						var fec_ult_act_cli = fua_cli;
-					}
-						$.getJSON("http://leocondori.com.ar/app/local/downloadclient.php", {ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave, fua_cliente: fec_ult_act_cli}, ItsDownloadClient, "json");
-					})
-		//FIN: Sincronizo clientes
-
-		//Sincronizo lista de precios:
-					$("#LisPre").click(function(){
-					$("#estadodown").show();
-					$("#estadodown").html('<div class="progress">' +
-							  '<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"> ' +
-							  '<span class="sr-only">100% Complete</span>' +
-							  '</div>' +
-							  '</div>');
-					//Para la pimera ejecución, entonces controlo si está declarada o no.
-					fua_precios = window.localStorage.getItem("fua_precios");
-					if(!fua_precios){
-						var fec_ult_act_pre = '';
-					}else{
-						var fec_ult_act_pre = fua_precios;
-					}
-						$.getJSON("http://leocondori.com.ar/app/local/erp_pre_ven.php", {ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave, fua_pre: fec_ult_act_pre}, ItsErpPreVen, "json");
-					});
-		//FIN: Sincronizar listas de precios.
-
-		//Fin del script.			
-				});
-				
-
-
-		//********************INICIO DE FUNCIONES *************************		
-		//FUCIONES			
-				function resultConn(respuesta){
-					if (respuesta.valor == 1){
-						$("#estado").hide();				   
-						navigator.notification.alert('Conexión creada con éxito', alertDismissed, 'Pedidos Mobile', 'Listo');
-					}else{
-						$("#estado").hide();
-						navigator.notification.alert('No se pudo realizar una conexión con el servicio web solicitado', alertDismissed, 'Pedidos Mobile', 'Listo');
-					}
 				}
-				
-				function ItsLogin(Response){
-					if (Response.ItsLoginResult == 1){
-						$("#estado").hide();				   
-						//alert('Error : ' + Response.motivo);
-						navigator.notification.alert('Error : ' + Response.motivo, alertDismissed, 'Pedidos Mobile', 'Listo');
-					}else{
-						$("#estado").hide();
-						//alert('Login realizado con éxito: ' + Response.session);
-						navigator.notification.alert('Login realizado con éxito: ' + Response.session, alertDismissed, 'Pedidos Mobile', 'Listo');
-					}
-				}
-
-				function ItsDownloadClient(Response){
-					if (Response.ItsLoginResult == 1){
-						$("#estadodown").html('');
-						navigator.notification.alert('Error : ' + Response.motivo, alertDismissed, 'Pedidos Mobile', 'Listo');
-					}else{
-							$("#estadodown").html('');
-							
-							$("#instala").show();
-							
-							if(Response.Cantidad != 0){
-
-							var db = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
-							db.transaction(crearEmpresa, errorCB, successCB);
-		function crearEmpresa(tx){													
-								for(var x=0; x<=Response.Data.length; x++) {
-										console.log('Esto es el ID: '+ Response.Data[x]["ID"]);
-										console.log('Esto es el DESC: '+ Response.Data[x]["DESCRIPCION"]);
-										console.log('Esto es el TE: '+ Response.Data[x]["TE"]);
-										console.log('Esto es el NUM_DOC: '+ Response.Data[x]["NUM_DOC"]);
-										tx.executeSql("INSERT INTO erp_empresas (id, descripcion, te, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["NUM_DOC"]+"') ");
-									}
-								}
-								
-								$("#instala").html('<span class="label label-default">¡Genial! se han sincronizado ' + Response.Data.length + ' registros.</span><br>');
-								window.localStorage.setItem("fua_cli", Response.ItsGetDate);
-								$("#instala").append('<span class="label label-success">Fecha de última actualización: ' + Response.ItsGetDate + '</span>');
-								console.log('Fecha de última actualización:' + Response.ItsGetDate);						
-								//$("#instala").fadeOut(10000);						
-							}else{
-					if( confirm("No hay empresas nuevas para centralizar desde la última vez que se sincronizó, la fecha y hora es " + fua_cli + ". De todas maneras ¿Desea forzar la centralización? se perderán todas las empresas guardadas.") )
-					{
-					//Borro los datos de la tabla.
-					var db = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
-					db.transaction(function(tx) {
-					tx.executeSql("delete from erp_empresas");
-					}, errorCB, successCB);
-					
-					//Actualizo la fecha de última actualización.
-					  window.localStorage.setItem("fua_cli", '');
-					//Todo fue maravilloso  
-					  //alert('¡Excelente! ahora volvé a centralizar las empresas.');
-					  navigator.notification.alert('¡Excelente! ahora volvé a centralizar las empresas.', alertDismissed, 'Pedidos Mobile', 'Listo');
-						//location.reload();			  
-					}
-							
-								//$("#instala").html('<span class="label label-info">Tenés el maestro de empresas actualizado</span><br>');
-								$("#instala").fadeOut(9000);
-							}
-					}
-				}
-
-				function ItsErpPreVen(Response){
-					if (Response.ItsLoginResult == 1){
-						$("#estadodown").hide();				   
-						//alert('Error : ' + Response.motivo);
-						navigator.notification.alert('Error : ' + Response.motivo, alertDismissed, 'Pedidos Mobile', 'Listo');
-					}else{
-							$("#estadodown").hide();
-							$("#instala").show();
-		if(Response.Cantidad != 0){
-							var db = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
-							db.transaction(crearPrecios, errorCB, successCBs());
-		function crearPrecios(tx){
-								$("#progressbars").html('');
-								for(x=0; x<=Response.Data.length; x++){
-										//console.log('Esto es el ID: '+ Response.Data[x]["ID"]);
-										//console.log('Esto es el ARTICULOS: '+ Response.Data[x]["FK_ERP_ARTICULOS"]);
-										//console.log('Esto es la DESCRIPCIÓN: '+ Response.Data[x]["DES_ART"]);
-										//console.log('Esto es el PRECIO: '+ Response.Data[x]["PRECIO"]);								
-										tx.executeSql("INSERT INTO erp_pre_ven (id, fk_erp_articulos, des_art, precio) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["FK_ERP_ARTICULOS"]+"', '"+Response.Data[x]["DES_ART"]+"', "+Response.Data[x]["PRECIO"]+") ");
-										//calculaPorcentaje(Response.Data.length, x);			
-									}
-								}
-
-
-							$("#instala").html('<span class="label label-default">¡Genial! se han sincronizado ' + Response.Data.length + ' registros.</span><br>');
-							window.localStorage.setItem("fua_precios", Response.ItsGetDate);
-							$("#instala").append('<span class="label label-success">Fecha de última actualización: ' + Response.ItsGetDate + '</span>');
-							console.log('Fecha de última actualización:' + Response.ItsGetDate);
-
-		}else{
-					if(confirm("No hay precios nuevos o actualizados para centralizar desde la última vez que se sincronizó, la fecha y hora es " + fua_cli + ". De todas maneras ¿Desea forzar la centralización? se perderán todos los precios guardadas.") ){
-					var db = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
-					db.transaction(function(tx) {
-					tx.executeSql("delete from erp_pre_ven");
-					}, errorCB, successCB);
-					
-					//Actualizo la fecha de última actualización.
-					  window.localStorage.setItem("fua_precios", '');
-					//Todo fue maravilloso  
-					navigator.notification.alert('¡Excelente! ahora volvé a centralizar los precios.');  
-					//location.reload();			  
-					}					
-					$("#instala").html('<span class="label label-info">Tenés la lista de precios actualizada.</span><br>');
-					$("#instala").fadeOut(9000);
-							}
-					}
-				}		
-
-		function errorCB(err){
-			console.log("Error procesando SQL:" + err.code);
-			//navigator.notification.alert("Error procesando SQL:" + err.code);
-			//alert("Error procesando SQL:" + err.code + '-' + err.message);
-			navigator.notification.alert("Error procesando SQL:" + err.code + '-' + err.message, alertDismissed, 'Pedidos Mobile', 'Listo');
-		}
-
-		function successCB(){
-			mkLog("Dato insertado");
-			navigator.notification.alert("Error procesando SQL:" + err.code);
-		}
-
-		function successCBs(total, count){
-		var total;
-		var count;
-		calculaPorcentaje(total, count); 
-		}
-
-
-    function cameraSuccess(imageURL) {
-        $("#foto_img").attr("src", imageURL);
-    }
-
-    function cameraError(msg) {
-        navigator.notification.alert('Error capturando foto: '+ msg, alertDismissed, 'Obtener foto', 'Listo');     
-    }
 
 
 function ShowParam(){
@@ -765,11 +522,13 @@ function creaNuevaDB(tx){
 	tx.executeSql(sql);
 	
 	//Creo la tabla ERP_EMPRESAS
+	//tx.executeSql('delete from erp_empresas');
 	tx.executeSql('DROP TABLE IF EXISTS erp_empresas');
 	var empresas = "CREATE TABLE IF NOT EXISTS erp_empresas ( " +
 		  		   "id VARCHAR(50) PRIMARY KEY, " +
 		    	   "descripcion VARCHAR(100)," +
 				   "te VARCHAR(30)," +
+				   "saldo VARCHAR(15)," +
 		           "num_doc VARCHAR(13) )";			   
 	tx.executeSql(empresas);
 	console.log('Creé la tabla ERP_EMPRESAS');
@@ -1085,7 +844,7 @@ function searchEmpSuccess(tx, results){
 				console.log('Encontre esto: ' + empresult.descripcion);
 				
 				//Imprimo los resultados encontrados.
-				$("#erpempresassearch").append('<button type="button" onclick="clickMeEmp(\' '+ empresult.id + ' \', \' '+ empresult.descripcion +' \', \' '+ empresult.te + '\', \' '+ empresult.num_doc + ' \');" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> '+ empresult.id +' - '+ empresult.descripcion +' ['+ empresult.num_doc +'] | ['+ empresult.te +']</button>');
+				$("#erpempresassearch").append('<button type="button" onclick="clickMeEmp(\' '+ empresult.id + ' \', \' '+ empresult.descripcion +' \', \' '+ empresult.te + '\', \' '+ empresult.num_doc + ' \');" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> '+ empresult.id +' - '+ empresult.descripcion +' ['+ empresult.num_doc +'] | ['+ empresult.te +'] | ['+ empresult.saldo +']</button>');
 			}
 	}	
 }
@@ -1179,12 +938,16 @@ function clickMeArt(erp_articulos, descrip, ca, costo){
 
 	var acumulado = window.localStorage.getItem("total");
 	console.log('Este es el valor acumulado en locastorage: ' + acumulado);
+	console.log('Esta es la cantidad: ' + ca);
+	console.log('Este es el costo: ' + costo);
 	
-	total = (ca * costo) + acumulado;
+	var totalrenglon = ca * costo;
+	
+	total = totalrenglon + total;
+	console.log('Este es el total: ' + total);
 	
 	window.localStorage.setItem("total", total);
 	
-	console.log('Este es el total: ' + total);
 	
 	$("#totalPie").html(total);
 	
