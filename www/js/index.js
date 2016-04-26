@@ -16,7 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-    var i_log = 0; 
+    var i_log = 0;
+	var total = 0;
     var existe_db;
 	var db
 	var exite
@@ -58,7 +59,7 @@ var app = {
 		*/
         console.log('Received Event: ' + id);
 		//alert('Comencé');
-		
+		window.localStorage.setItem("total", total);
 		//window.localStorage.setItem("existe_db", 0);
 		onDeviceReadyNow();
     }
@@ -1175,6 +1176,17 @@ function clickMeArt(erp_articulos, descrip, ca, costo){
 	window.localStorage.setItem("fk_erp_articulos", erp_articulos);
 	window.localStorage.setItem("precio", costo);
     window.localStorage.setItem("cantidad", ca);
+
+	var acumulado = window.localStorage.getItem("total");
+	console.log('Este es el valor acumulado en locastorage: ' + acumulado);
+	
+	total = (ca * costo) + acumulado;
+	
+	window.localStorage.setItem("total", total);
+	
+	console.log('Este es el total: ' + total);
+	
+	$("#totalPie").html(total);
 	
 	navigator.notification.alert('El artículo ' + descrip + ' se agregó correctamente.', alertDismissed, 'Pedidos Mobile', 'Listo');
 	
