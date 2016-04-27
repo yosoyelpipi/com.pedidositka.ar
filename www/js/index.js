@@ -241,7 +241,8 @@ function onDeviceReadyNow(){
 							if(Response.Cantidad != 0){
 							//var dbeee = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
 							db.transaction(crearEmpresa, errorCB, successCBEmp);
-		function crearEmpresa(tx){													
+		function crearEmpresa(tx){
+								$("#progressbars").show();
 								for(var x=0; x<Response.Data.length; x++) {
 										  console.log("INSERT INTO erp_empresas (id, descripcion, te, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["NUM_DOC"]+"' ) ");
 										//tx.executeSql("INSERT INTO erp_empresas (id, descripcion, te, saldo, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["SALDO"]+"', '"+Response.Data[x]["NUM_DOC"]+"') ");
@@ -284,25 +285,17 @@ function onDeviceReadyNow(){
 
 				function ItsErpPreVen(Response){
 					if (Response.ItsLoginResult == 1){
-						$("#estadodown").hide();				   
-						//alert('Error : ' + Response.motivo);
+						$("#estadodown").hide();
 						navigator.notification.alert('Error : ' + Response.motivo, alertDismissed, 'Pedidos Mobile', 'Listo');
 					}else{
 							$("#estadodown").hide();
 							$("#instala").show();
 		if(Response.Cantidad != 0){
-							//var db = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
 							db.transaction(crearPrecios, errorCB, successCBs);
 		function crearPrecios(tx){
-								$("#progressbars").html('');
-								for(x=0; x<Response.Data.length; x++){										
-										//calculaPorcentaje(Response.Data.length, x);
-										//console.log('Esto es el ID: '+ Response.Data[x]["ID"]);
-										//console.log('Esto es el ARTICULOS: '+ Response.Data[x]["FK_ERP_ARTICULOS"]);
-										//console.log('Esto es la DESCRIPCIÓN: '+ Response.Data[x]["DES_ART"]);
-										//console.log('Esto es el PRECIO: '+ Response.Data[x]["PRECIO"]);								
+								$("#progressbars").show();
+								for(x=0; x<Response.Data.length; x++){																		
 										var c = Response.Data.length;
-										//alert('Hola soy la cantidad total' + Response.Data.length);
 										console.log("INSERT INTO erp_pre_ven (id, fk_erp_articulos, des_art, saldo, precio) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["FK_ERP_ARTICULOS"]+"', '"+Response.Data[x]["DES_ART"]+"', '"+Response.Data[x]["SAL_DISP"]+"', "+Response.Data[x]["PRECIO"]+") ");
 										tx.executeSql("INSERT INTO erp_pre_ven (id, fk_erp_articulos, des_art, saldo, precio) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["FK_ERP_ARTICULOS"]+"', '"+Response.Data[x]["DES_ART"]+"', '"+Response.Data[x]["SAL_DISP"]+"', "+Response.Data[x]["PRECIO"]+") ", [], function queryLCSuccess(c){
 	var incremento = inicio++;
