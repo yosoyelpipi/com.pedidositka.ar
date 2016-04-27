@@ -186,6 +186,8 @@ function onDeviceReadyNow(){
 		}
 		
 		function successCBEmp(){
+			//Limpio el progressBar para que la próxima vez que lo quiera usar no exista en el HTML y lo tenga que volver a escribir.
+			$("#progressbars").html('');
 			$("#progressbars").hide();
 			$("#instala").html('<span class="label label-default">Sincronización finalizada con éxito.</span><br>');
 			$("#instala").fadeOut(4000);
