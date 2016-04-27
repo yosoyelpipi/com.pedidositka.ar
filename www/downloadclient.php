@@ -51,9 +51,9 @@ $client = new nusoap_client($ws,true);
 								if($count==''){$counts=0;}
 								for ($i=0; $i<sizeof($langs); $i++) {
 if($count == 1){
-$datos = array('ID'=>$langs['@attributes']['ID'],'DESCRIPCION'=>$langs['@attributes']['DESCRIPCION'],'TE'=>$langs['@attributes']['TE'],'NUM_DOC'=>$langs['@attributes']['NUM_DOC'], 'SALDO'=>$langs['@attributes']['_SALDOS']);
+$datos = array('ID'=>$langs['@attributes']['ID'],'DESCRIPCION'=>$langs['@attributes']['DESCRIPCION'],'TE'=>$langs['@attributes']['TE'],'NUM_DOC'=>$langs['@attributes']['NUM_DOC'], 'SALDO'=>round($langs['@attributes']['_SALDOS'], 2) );
 }else{
-$datos = array('ID'=>$langs[$i]['@attributes']['ID'],'DESCRIPCION'=>$langs[$i]['@attributes']['DESCRIPCION'],'TE'=>$langs[$i]['@attributes']['TE'],'NUM_DOC'=>$langs[$i]['@attributes']['NUM_DOC'], 'SALDO'=>$langs$langs[$i]['@attributes']['_SALDOS']);
+$datos = array('ID'=>$langs[$i]['@attributes']['ID'],'DESCRIPCION'=>$langs[$i]['@attributes']['DESCRIPCION'],'TE'=>$langs[$i]['@attributes']['TE'],'NUM_DOC'=>$langs[$i]['@attributes']['NUM_DOC'], 'SALDO'=>round($langs[$i]['@attributes']['_SALDOS'], 2) );
 }									
 									$salida[] = $datos;
 								}

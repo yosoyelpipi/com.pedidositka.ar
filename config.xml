@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.pedidositris.app" version="2.4.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-	<name>ItsPedidos</name>		
-	<description>ItsClient es una aplicacion que te permite grabar pedidos con tu celular en Itris Software.</description>
-	<author href="http://www.itris.com.ar" email="soportecliente@itris.com.ar">
+    <name>ItsPedidos</name>
+    <description>ItsClient es una aplicacion que te permite grabar pedidos con tu celular en Itris Software.</description>
+    <author email="soportecliente@itris.com.ar" href="http://www.itris.com.ar">
 	@itrissoftware
-	</author>  
+	</author>
     <content src="index.html" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="14" />
