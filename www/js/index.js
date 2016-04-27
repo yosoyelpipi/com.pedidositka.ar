@@ -18,6 +18,7 @@
  */
     var i_log = 0;
 	var total = 0;
+	var inicio = 0;
     var existe_db;
 	var db;
 	var exite;
@@ -180,16 +181,24 @@ function onDeviceReadyNow(){
 			//alert("Error procesando SQL:" + err.code + '-' + err.message);
 			navigator.notification.alert("Error procesando SQL:" + err.code + '-' + err.message, alertDismissed, 'Pedidos Mobile', 'Listo');
 		}		
-		
 		function successCB(){
-			mkLog("Dato insertado");
-			//navigator.notification.alert("Insertamos todos los datos con éxito");
+		mkLog("Dato insertado");
+		}
+		
+		function successCBEmp(){
+			$("#progressbars").hide();
+			$("#instala").html('<span class="label label-default">Sincronización finalizada con éxito.</span><br>');
+			$("#instala").fadeOut(4000);
 		}
 
-		function successCBs(total, count){
-		var total;
-		var count;
-		calculaPorcentaje(total, count); 
+		function successCBs(){
+			$("#progressbars").hide();
+			$("#instala").html('<span class="label label-default">Sincronización finalizada con éxito</span><br>');
+			$("#instala").fadeOut(4000);
+			//alert('Pase por aca');			
+		//var total;
+		//var count;
+		//calculaPorcentaje(total, count); 
 		}
 
 		//********************INICIO DE FUNCIONES *************************		
@@ -227,18 +236,23 @@ function onDeviceReadyNow(){
 							
 							if(Response.Cantidad != 0){
 							//var dbeee = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
-							db.transaction(crearEmpresa, errorCB, successCB);
+							db.transaction(crearEmpresa, errorCB, successCBEmp);
 		function crearEmpresa(tx){													
 								for(var x=0; x<Response.Data.length; x++) {
 										  console.log("INSERT INTO erp_empresas (id, descripcion, te, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["NUM_DOC"]+"' ) ");
-										tx.executeSql("INSERT INTO erp_empresas (id, descripcion, te, saldo, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["SALDO"]+"', '"+Response.Data[x]["NUM_DOC"]+"') ");
-										//tx.executeSql("INSERT INTO erp_empresas (id, descripcion, te, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["NUM_DOC"]+"') ");
+										//tx.executeSql("INSERT INTO erp_empresas (id, descripcion, te, saldo, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["SALDO"]+"', '"+Response.Data[x]["NUM_DOC"]+"') ");
+										var c = Response.Data.length;
+										//alert('Hola soy la cantidad total' + Response.Data.length);
+										tx.executeSql("INSERT INTO erp_empresas (id, descripcion, te, saldo, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["SALDO"]+"', '"+Response.Data[x]["NUM_DOC"]+"') ", [], function queryLMCSuccess(c){
+	var incremento = inicio++;
+	calculaPorcentaje(x, incremento);
+										}, errorLCCB );										
 									}
 								}
 								
-								$("#instala").html('<span class="label label-default">¡Genial! se han sincronizado ' + Response.Data.length + ' registros.</span><br>');
+								//$("#instala").html('<span class="label label-default">¡Genial! se han sincronizado ' + Response.Data.length + ' registros.</span><br>');
 								window.localStorage.setItem("fua_cli", Response.ItsGetDate);
-								$("#instala").append('<span class="label label-success">Fecha de última actualización: ' + Response.ItsGetDate + '</span>');
+								//$("#instala").append('<span class="label label-success">Fecha de última actualización: ' + Response.ItsGetDate + '</span>');
 								console.log('Fecha de última actualización:' + Response.ItsGetDate);						
 								//$("#instala").fadeOut(10000);						
 							}else{
@@ -277,20 +291,26 @@ function onDeviceReadyNow(){
 							db.transaction(crearPrecios, errorCB, successCBs);
 		function crearPrecios(tx){
 								$("#progressbars").html('');
-								for(x=0; x<Response.Data.length; x++){
+								for(x=0; x<Response.Data.length; x++){										
+										//calculaPorcentaje(Response.Data.length, x);
 										//console.log('Esto es el ID: '+ Response.Data[x]["ID"]);
 										//console.log('Esto es el ARTICULOS: '+ Response.Data[x]["FK_ERP_ARTICULOS"]);
 										//console.log('Esto es la DESCRIPCIÓN: '+ Response.Data[x]["DES_ART"]);
 										//console.log('Esto es el PRECIO: '+ Response.Data[x]["PRECIO"]);								
-										tx.executeSql("INSERT INTO erp_pre_ven (id, fk_erp_articulos, des_art, precio) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["FK_ERP_ARTICULOS"]+"', '"+Response.Data[x]["DES_ART"]+"', "+Response.Data[x]["PRECIO"]+") ");
-										//calculaPorcentaje(Response.Data.length, x);			
+										var c = Response.Data.length;
+										//alert('Hola soy la cantidad total' + Response.Data.length);
+										console.log("INSERT INTO erp_pre_ven (id, fk_erp_articulos, des_art, saldo, precio) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["FK_ERP_ARTICULOS"]+"', '"+Response.Data[x]["DES_ART"]+"', '"+Response.Data[x]["SAL_DISP"]+"', "+Response.Data[x]["PRECIO"]+") ");
+										tx.executeSql("INSERT INTO erp_pre_ven (id, fk_erp_articulos, des_art, saldo, precio) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["FK_ERP_ARTICULOS"]+"', '"+Response.Data[x]["DES_ART"]+"', '"+Response.Data[x]["SAL_DISP"]+"', "+Response.Data[x]["PRECIO"]+") ", [], function queryLCSuccess(c){
+	var incremento = inicio++;
+	calculaPorcentaje(x, incremento);
+										}, errorLCCB );
 									}
 								}
 
 
-							$("#instala").html('<span class="label label-default">¡Genial! se han sincronizado ' + Response.Data.length + ' registros.</span><br>');
+							//$("#instala").html('<span class="label label-default">¡Genial! se han sincronizado ' + Response.Data.length + ' registros.</span><br>');
 							window.localStorage.setItem("fua_precios", Response.ItsGetDate);
-							$("#instala").append('<span class="label label-success">Fecha de última actualización: ' + Response.ItsGetDate + '</span>');
+							//$("#instala").append('<span class="label label-success">Fecha de última actualización: ' + Response.ItsGetDate + '</span>');
 							console.log('Fecha de última actualización:' + Response.ItsGetDate);
 
 		}else{
@@ -306,8 +326,8 @@ function onDeviceReadyNow(){
 					navigator.notification.alert('¡Excelente! ahora volvé a centralizar los precios.');  
 					//location.reload();			  
 					}					
-					$("#instala").html('<span class="label label-info">Tenés la lista de precios actualizada.</span><br>');
-					$("#instala").fadeOut(9000);
+					//$("#instala").html('<span class="label label-info">Tenés la lista de precios actualizada.</span><br>');
+					//$("#instala").fadeOut(9000);
 							}
 					}
 				}
@@ -538,7 +558,8 @@ function creaNuevaDB(tx){
 	var precios = "CREATE TABLE IF NOT EXISTS erp_pre_ven ( " +
 		  		   "id VARCHAR(50) PRIMARY KEY, " +
 		    	   "fk_erp_articulos VARCHAR(50)," +
-		    	   "des_art VARCHAR(40)," +				   
+		    	   "des_art VARCHAR(40)," +
+				   "saldo VARCHAR(10)," +
 		           "precio NUMERIC(10,4) )";
 	tx.executeSql(precios);
 	console.log('Creé la tabla erp_pre_ven');
@@ -791,7 +812,7 @@ function searchArtSuccess(tx, results){
 				console.log('Encontre esto: ' + artresult.fk_erp_articulos);
 				
 				//Imprimo los resultados encontrados.
-				$("#erpdetarticulossearch").append('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><button type="button" onclick="clickMeArtNonCant(\' '+ artresult.fk_erp_articulos + ' \', \' '+ artresult.des_art +' \', \' '+ artresult.precio + '\' )";  class="list-group-item" >'+ artresult.fk_erp_articulos +' - '+ artresult.des_art +' <span class="badge">$ '+ artresult.precio +'</span></button>');
+				$("#erpdetarticulossearch").append('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><button type="button" onclick="clickMeArtNonCant(\' '+ artresult.fk_erp_articulos + ' \', \' '+ artresult.des_art +' \', \' '+ artresult.precio + '\' )";  class="list-group-item" >'+ artresult.fk_erp_articulos +' - '+ artresult.des_art +' <span class="badge">$ '+ artresult.precio +'</span> | <span class="badge">Saldo: '+ artresult.saldo +'</span></button>');
 			}
 	}	
 }
@@ -1102,17 +1123,24 @@ function alertDismissed() {
     // do something
 }
 
+function errorLCCB(){
+	console.log('error en insertar precios');
+	
+}
+
+
 function calculaPorcentaje(totalRegistros, proceso){
 	var totalRegistros;
 	var proceso;
 	var porcentaje = proceso * 100 / totalRegistros;
+	if(parseInt(porcentaje)==99){porcentaje = 100;}
 	$("#progressbars").html('<div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="'+ parseInt(porcentaje) +'" aria-valuemin="0" aria-valuemax="'+ totalRegistros +'" style="width: '+ parseInt(porcentaje) +'%;">'+ parseInt(porcentaje) +'%</div></div>');
+	//progressBar(porcentaje, totalRegistros);
 }
 
 function progressBar(porcentaje, totalRegistros){
 	var porcentaje;
-	var totalRegistros;
-	//document.getElementById('barras').innerHTML='<div id="pro" class="progress-bar" role="progressbar" aria-valuenow="'+ porcentaje +'" aria-valuemin="0" aria-valuemax="'+ total +'" style="width: '+ porcentaje +'%;">'+ porcentaje +'%</div>';  
+	var totalRegistros;	
 	$("#progressbars").html('<div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="'+ parseInt(porcentaje) +'" aria-valuemin="0" aria-valuemax="'+ totalRegistros +'" style="width: '+ parseInt(porcentaje) +'%;">'+ parseInt(porcentaje) +'%</div></div>');
 }
 
