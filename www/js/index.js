@@ -967,7 +967,7 @@ function clickMeArt(erp_articulos, descrip, ca, costo){
 	window.localStorage.setItem("total", total);
 	
 	
-	$("#totalPie").html(total);
+	$("#totalPie").html(total.toFixed(2));
 	
 	navigator.notification.alert('El artículo ' + descrip + ' se agregó correctamente.', alertDismissed, 'Pedidos Mobile', 'Listo');
 	
@@ -1073,8 +1073,11 @@ function syncArtSuccess(tx, results){
 	console.log("Recibidos de la base de datos erp_mig_ped " + results.rows.length + " registros");
 	if(results.rows.length == 0){
 		console.log("La tabla erp_mig_ped está vacía.");
+		$("#leyenda").html('');
 		navigator.notification.alert("No hay pedido guardados off line para centralizar.", alertDismissed, 'Pedidos Mobile', 'Listo');
 	}else{
+		$("#jsonPed").html('');
+		$("#leyenda").html('Toque sobre los registros mostrados para sincronizar');
 		var contenido =[];
 		for(var i=0; i<results.rows.length; i++){
 			var art = results.rows.item(i);
