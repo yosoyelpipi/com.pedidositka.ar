@@ -1081,10 +1081,10 @@ function syncArtSuccess(tx, results){
 		var contenido =[];
 		for(var i=0; i<results.rows.length; i++){
 			var art = results.rows.item(i);
-			contenido[i]=(art.fk_erp_empresas, art.fk_erp_articulos, art.precio);
+			contenido[i]=(art.fk_erp_empresas, art.fk_erp_articulos, art.precio, art.cantidad);
 			//navigator.notification.alert(contenido);
 			//$("#jsonPed").append(art.fk_erp_empresas, art.fk_erp_articulos, art.precio);
-			$("#jsonPed").append('<button type="button" id="paraCen" onclick="erpCenNow(\''+art.id+'\', \''+art.fk_erp_empresas+'\', \''+art.fk_erp_articulos+'\', \''+art.precio+'\')" class="list-group-item">Empresa: '+art.fk_erp_empresas+' | Artículo: '+ art.fk_erp_articulos +'</button>');
+			$("#jsonPed").append('<button type="button" id="paraCen" onclick="erpCenNow(\''+art.id+'\', \''+art.fk_erp_empresas+'\', \''+art.fk_erp_articulos+'\', \''+art.precio+'\', \''+art.cantidad+'\')" class="list-group-item">Empresa: '+art.fk_erp_empresas+' | Artículo: '+ art.fk_erp_articulos +'</button>');
 			//erpCenNow('+art.id+', '+art.fk_erp_empresas+', '+art.fk_erp_articulos+', '+art.precio+');
             }
 	}	
@@ -1176,19 +1176,20 @@ function progressBar(porcentaje, totalRegistros){
 
 
 
-    function erpCenNow(ii, ee, aa, pp)
+    function erpCenNow(ii, ee, aa, pp, cc)
     {
         $("#estadoSync").show();
         var ii;
         var ee;
         var aa;
         var pp;
+		var cc;
         var WebService = window.localStorage.getItem("ws");
         var BaseDeDatos = window.localStorage.getItem("bd");
         var Usuario = window.localStorage.getItem("user");
         var Clave = window.localStorage.getItem("password");
-
-        $.getJSON("http://leocondori.com.ar/app/local/itssync.php", { id: ii, empresa: ee, articulo: aa, precio: pp, ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave }, resultSync, "json");
+		alert('Esta es la cantidad: ' + cc);
+        $.getJSON("http://leocondori.com.ar/app/local/itssync.php", { id: ii, empresa: ee, articulo: aa, precio: pp, cantidad: cc, ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave }, resultSync, "json");
     }
 
     //FUCIONES      
