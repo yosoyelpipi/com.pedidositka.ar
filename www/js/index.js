@@ -1188,7 +1188,7 @@ function progressBar(porcentaje, totalRegistros){
         var BaseDeDatos = window.localStorage.getItem("bd");
         var Usuario = window.localStorage.getItem("user");
         var Clave = window.localStorage.getItem("password");
-		alert('Esta es la cantidad: ' + cc);
+		//alert('Esta es la cantidad: ' + cc);
         $.getJSON("http://leocondori.com.ar/app/local/itssync.php", { id: ii, empresa: ee, articulo: aa, precio: pp, cantidad: cc, ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave }, resultSync, "json");
     }
 
