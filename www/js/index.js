@@ -60,6 +60,9 @@ var app = {
 		*/
         console.log('Received Event: ' + id);
 		//alert('Comencé');
+		if (cordova.platformId == 'android') {
+			StatusBar.backgroundColorByHexString("#333");
+		}
 
 		//window.localStorage.setItem("existe_db", 0);
 		onDeviceReadyNow();
