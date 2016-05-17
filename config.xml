@@ -9,7 +9,7 @@
     <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="14" />
 	<preference name="StatusBarOverlaysWebView" value="true" />
-	<preference name="StatusBarBackgroundColor" value="#000000" />
+	<preference name="StatusBarBackgroundColor" value="#0066AA" />
 	<preference name="StatusBarStyle" value="lightcontent" />
     <plugin name="cordova-plugin-console" source="npm" spec="&gt;1.0.0" />
     <plugin name="cordova-plugin-device" source="npm" spec="&gt;1.0.0" />

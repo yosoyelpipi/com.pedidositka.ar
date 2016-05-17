@@ -61,7 +61,7 @@ var app = {
         console.log('Received Event: ' + id);
 		//alert('Comencé');
 		if (cordova.platformId == 'android') {
-			StatusBar.backgroundColorByHexString("#333");
+			StatusBar.backgroundColorByHexString("#999");
 		}
 
 		//window.localStorage.setItem("existe_db", 0);
@@ -905,8 +905,25 @@ function clickMeArtNonCant(erp_articulos0, descrip0, costo0){
 	//alert(erp_articulos0);
 	//alert(descrip0);
 	//alert(costo0);
+
 	
-	navigator.notification.prompt(
+	var cancan = prompt("Ingresá la cantidad", "1");
+
+	if (cancan != null) {
+		//document.getElementById("demo").innerHTML =
+		//"Hello " + person + "! How are you today?";
+		clickMeArt(erp_articulos0, descrip0, cancan, costo0);
+	}
+	
+/*
+		jPrompt("Introduce la cantidad", "1", "Pedidos Itris", function(rr) {
+			if(rr) {
+				//jAlert("Tu nombre es "+r, "Actualidad jQuery");
+				clickMeArt(erp_articulos0, descrip0, rr, costo0);
+			}
+		});*/
+	
+	/*navigator.notification.prompt(
 		'Ingrese la cantidad',  // message
 		onPrompt,                  // callback to invoke
 		'Pedidos de ventas',            // title
@@ -927,7 +944,7 @@ function clickMeArtNonCant(erp_articulos0, descrip0, costo0){
 			return;
 		}
 	}
-
+*/
 	var canti = window.localStorage.getItem("cantidad");
 
 }

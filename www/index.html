@@ -45,6 +45,49 @@
 	<!-- Custom styles for this template -->
 	<link href="css/starter-template.css" rel="stylesheet">
 	
+	<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="js/jquery.alerts.js"></script>
+	<link href="css/jquery.alerts.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript"> 
+$(document).ready(function(){
+	$('#boton_alert').click(function() {
+		alert("Actualidad jQuery");
+	});
+	$('#boton_confirm').click(function() {
+		if(confirm("¿Te gusta Actualidad jQuery?")) {
+			alert("Te gusta Actualidad jQuery");
+		} else {
+			alert("No te gusta Actualidad jQuery");
+		}
+	});
+	$('#boton_prompt').click(function() {
+		variable = prompt("Introduce tu nombre","");
+		alert("Tu nombre es "+variable);
+	});
+	$('#boton_jalert').click(function() {
+		jAlert("Actualidad jQuery", "Actualidad jQuery");
+	});
+	$('#boton_jconfirm').click(function() {
+		jConfirm("¿Te gusta Actualidad jQuery?", "Actualidad jQuery", function(r) {
+			if(r) {
+				jAlert("Te gusta Actualidad jQuery", "Actualidad jQuery");
+			} else {
+				jAlert("No te gusta Actualidad jQuery", "Actualidad jQuery");
+			}
+		});
+	});
+	$('#boton_jprompt').click(function() {
+		jPrompt("Introduce tu nombre", "", "Actualidad jQuery", function(r) {
+			if(r) {
+				jAlert("Tu nombre es "+r, "Actualidad jQuery");
+			}
+		});
+	});
+});
+</script>
+
+	
 		<style>
 .container {
   width: auto;
@@ -169,6 +212,12 @@
 		<button type="button" class="btn btn-primary btn-lg btn-block" onClick="ShowDownload()"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span> Descargas</button>
 		<button type="button" class="btn btn-primary btn-lg btn-block" onClick="ShowOrder()"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Pedidos</button>
 		<button type="button" class="btn btn-primary btn-lg btn-block" onClick="ShowSync()"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> Enviar datos</button>
+		<!--		
+		<input type="button" id="boton_jalert" value="jAlert()" />
+		<input type="button" id="boton_jconfirm" value="jConfirm()" />
+		<input type="button" id="boton_jprompt" value="jPrompt()" />		
+		-->		
+		
 	</div>
 <!-- Configurar WebService -->	
 	<div id="config">
