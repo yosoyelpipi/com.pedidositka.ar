@@ -243,6 +243,7 @@ function onDeviceReadyNow(){
 							
 							if(Response.Cantidad != 0){
 							//var dbeee = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
+							db = window.openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
 							db.transaction(crearEmpresa, errorCB, successCBEmp);
 		function crearEmpresa(tx){
 								$("#progressbars").show();
@@ -294,6 +295,7 @@ function onDeviceReadyNow(){
 							$("#estadodown").hide();
 							$("#instala").show();
 		if(Response.Cantidad != 0){
+							db = window.openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
 							db.transaction(crearPrecios, errorCB, successCBs);
 		function crearPrecios(tx){
 								$("#progressbars").show();
@@ -382,6 +384,7 @@ function ShowDownload(){
 			navigator.notification.alert('Detectamos que no estás conectado a ninguna red Wi-Fi, conectate a alguna red disponible y volvé por acá');
 		}	
 	}
+
 
 function ShowSync(){	
 	var networkState = navigator.connection.type;
