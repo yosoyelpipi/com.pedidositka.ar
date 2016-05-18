@@ -268,7 +268,7 @@ function onDeviceReadyNow(){
 					if( confirm("No hay empresas nuevas para centralizar desde la última vez que se sincronizó, la fecha y hora es " + fua_cli + ". De todas maneras ¿Desea forzar la centralización? se perderán todas las empresas guardadas.") )
 					{
 					//Borro los datos de la tabla.
-					//var db = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
+					db = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
 					db.transaction(function(tx) {
 					tx.executeSql("delete from erp_empresas");
 					}, errorCB, successCB);
@@ -317,7 +317,7 @@ function onDeviceReadyNow(){
 
 		}else{
 					if(confirm("No hay precios nuevos o actualizados para centralizar desde la última vez que se sincronizó, la fecha y hora es " + fua_cli + ". De todas maneras ¿Desea forzar la centralización? se perderán todos los precios guardadas.") ){
-					//var db = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
+					db = openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
 					db.transaction(function(tx) {
 					tx.executeSql("delete from erp_pre_ven");
 					}, errorCB, successCB);
@@ -530,6 +530,7 @@ function checkConnection() {
 *Creación de base de datos
 */
 function creaDB(){
+	db = window.openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
 	db.transaction(creaNuevaDB, errorDB, crearSuccess);
 	}
 
