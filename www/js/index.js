@@ -913,7 +913,11 @@ function clickMeArtNonCant(erp_articulos0, descrip0, costo0){
 	if (cancan != null) {
 		//document.getElementById("demo").innerHTML =
 		//"Hello " + person + "! How are you today?";
-		clickMeArt(erp_articulos0, descrip0, cancan, costo0);
+		if (is_integer(cancan)){
+				clickMeArt(erp_articulos0, descrip0, cancan, costo0);
+			}else{
+				jAlert("¡Tenés que ingresar un número!", "Pedidos Mobile");
+			}
 	}
 	
 /*
@@ -948,6 +952,14 @@ function clickMeArtNonCant(erp_articulos0, descrip0, costo0){
 */
 	var canti = window.localStorage.getItem("cantidad");
 
+}
+
+
+function is_integer(value){
+	for (i = 0 ; i < value.length ; i++) {
+		if ((value.charAt(i) < '0') || (value.charAt(i) > '9')) return false
+	}
+	return true;
 }
 
 
