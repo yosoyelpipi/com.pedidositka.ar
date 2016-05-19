@@ -84,8 +84,8 @@ function onDeviceReadyNow(){
     mkLog("Ejecute el onDeviceReady--->");
 	window.localStorage.setItem("total", total);
 	
-	//existe_db = window.localStorage.getItem("existe_db");	
-	existe_db = null;
+	existe_db = window.localStorage.getItem("existe_db");	
+	//existe_db = null;
 	db = window.openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
 	console.log('informo si la base existe o no ' + existe_db);
 	if(existe_db == null){
@@ -1315,3 +1315,14 @@ function progressBar(porcentaje, totalRegistros){
         //alert('Función no implementada.');
 		navigator.notification.alert('Función no implementada', alertDismissed, 'Pedidos Mobile', 'Listo');
     }
+	
+	function Resetear(){
+		$('#navbar').collapse('hide');
+		deleteAllTwo();
+		/*
+		if (confirm("¿Estás seguro que borras todos los datos locales de la app?")){
+            localStorage.clear();
+			location.reload();
+        }
+		*/
+	}
