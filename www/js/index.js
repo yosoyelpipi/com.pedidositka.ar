@@ -60,9 +60,6 @@ var app = {
 		*/
         console.log('Received Event: ' + id);
 		//alert('Comencé');
-		if (cordova.platformId == 'android') {
-			StatusBar.backgroundColorByHexString("#999");
-		}
 
 		//window.localStorage.setItem("existe_db", 0);
 		onDeviceReadyNow();
@@ -87,10 +84,10 @@ function onDeviceReadyNow(){
     mkLog("Ejecute el onDeviceReady--->");
 	window.localStorage.setItem("total", total);
 	
-	existe_db = window.localStorage.getItem("existe_db");	
-	//existe_db = null;
+	//existe_db = window.localStorage.getItem("existe_db");	
+	existe_db = null;
 	db = window.openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
-	
+	console.log('informo si la base existe o no ' + existe_db);
 	if(existe_db == null){
 	    mkLog("la BD es null");
 		creaDB();

@@ -85,6 +85,19 @@ $(document).ready(function(){
 		});
 	});
 });
+
+function deleteAllTwo(){
+			$('#navbar').collapse('hide');
+			jConfirm("Todos los datos de esta aplicación se eliminarán permanentemente, incluído todos los archivos, ajustes, cuentas, bases de datos, etc", "¿Elim datos aplicación?", function(r) {
+						if(r) {
+							//jAlert("Te gusta Actualidad jQuery", "Pedidos Mobile");
+							localStorage.clear();
+							location.reload();
+						} else {
+							jAlert("¡Sabia decisión!", "Pedidos Mobile");
+						}
+					});
+}
 </script>
 
 	
@@ -197,6 +210,8 @@ $(document).ready(function(){
 				<li><a href="javascript:ShowDownload();"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span> Descargas</a></li>
 				<li><a href="javascript:ShowOrder();"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Pedidos</a></li>
 				<li><a href="javascript:ShowSync();"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> Enviar datos</a></li>
+				<li role="separator" class="divider"></li>
+				<li><a href="javascript:deleteAllTwo();"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> Reiniciar App</a></li>
 			  </ul>
 			</div><!--/.nav-collapse -->
 		  </div>
