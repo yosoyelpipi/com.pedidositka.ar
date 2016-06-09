@@ -46,6 +46,8 @@
 	<link href="css/starter-template.css" rel="stylesheet">
 	
 	<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+
+
 	<script type="text/javascript" src="js/jquery.alerts.js"></script>
 	<link href="css/jquery.alerts.css" rel="stylesheet" type="text/css" />
 
@@ -180,7 +182,21 @@ function deleteAllTwo(){
 	}
     #menufooter {
         display:  none;
-    }			
+    }
+
+#WindowLoad
+{
+    position:fixed;
+    top:0px;
+    left:0px;
+    z-index:3200;
+    filter:alpha(opacity=65);   
+   -moz-opacity:65;   
+    opacity:0.65;
+    background:#999;
+}
+		
+
 		</style>
 		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -372,10 +388,10 @@ function deleteAllTwo(){
         <img id="foto_img" src="img/512x512.png" width="300px" height="300px"/>
 		<hr>-->
 		<button type="button" class="btn btn-primary btn-lg btn-block" onClick="HideOrder()"><span class="glyphicon glyphicon-backward" aria-hidden="true"></span> Volver</button>
+<br>
 	</div>
 <!-- FIN PEDIDOS -->	
-<br>
-<hr>
+
 
 <!-- Listas de precios -->
 <div class="modal fade" id="lisPrecios" tabindex="-1" role="dialog" aria-labelledby="myModalLabell">
@@ -450,9 +466,12 @@ function deleteAllTwo(){
 
 
 	<div id="sync">
+
+	<button type="button" class="btn btn-warning btn-lg btn-block" onClick="sendAllCar()"><span class="glyphicon glyphicon-random" aria-hidden="true"></span> Enviar todos</button>
+	<button type="button" class="btn btn-danger btn-lg btn-block" onClick="deleteAllCar()"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Borrar todos</button>
 	<button type="button" class="btn btn-success btn-lg btn-block" onClick="syncPrepare()"><span class="glyphicon glyphicon-saved" aria-hidden="true"></span> Ver pedidos guardados</button>
-	<span class="label label-default" id="leyenda"></span>
-	<hr>
+	<span class="label label-default" id="leyenda"></span><hr>
+	
 	<div class="list-group" id="jsonPed">
 	</div>
 	<div id="estadoSync">

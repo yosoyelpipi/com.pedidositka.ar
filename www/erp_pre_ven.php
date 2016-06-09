@@ -11,7 +11,7 @@ $pass = $_GET["pass"];
 $fua = $_GET["fua_pre"];
 
 /*
-$ws = "http://200.55.245.171:3000/ITSWS/ItsCliSvrWS.asmx?WSDL";
+$ws = "http://iserver.itris.com.ar:3000/ITSWS/ItsCliSvrWS.asmx?WSDL";
 $bd = "LM_10_09_14";
 $user = "administrador";
 $pass = "12348";

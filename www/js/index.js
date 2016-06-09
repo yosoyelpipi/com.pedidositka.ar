@@ -1107,7 +1107,8 @@ function syncArtSuccess(tx, results){
 	if(results.rows.length == 0){
 		console.log("La tabla erp_mig_ped está vacía.");
 		$("#leyenda").html('');
-		navigator.notification.alert("No hay pedido guardados off line para centralizar.", alertDismissed, 'Pedidos Mobile', 'Listo');
+		$("#jsonPed").html('');
+		navigator.notification.alert("No hay pedido guardados off line para centralizar.");
 	}else{
 		$("#jsonPed").html('');
 		$("#leyenda").html('Toque sobre los registros mostrados para sincronizar');
@@ -1117,7 +1118,7 @@ function syncArtSuccess(tx, results){
 			contenido[i]=(art.fk_erp_empresas, art.fk_erp_articulos, art.precio, art.cantidad);
 			//navigator.notification.alert(contenido);
 			//$("#jsonPed").append(art.fk_erp_empresas, art.fk_erp_articulos, art.precio);
-			$("#jsonPed").append('<button type="button" id="paraCen" onclick="erpCenNow(\''+art.id+'\', \''+art.fk_erp_empresas+'\', \''+art.fk_erp_articulos+'\', \''+art.precio+'\', \''+art.cantidad+'\')" class="list-group-item">Empresa: '+art.fk_erp_empresas+' | Artículo: '+ art.fk_erp_articulos +'</button>');
+			$("#jsonPed").append('<button type="button" id="paraCen" onclick="erpCenNow(\''+art.id+'\', \''+art.fk_erp_empresas+'\', \''+art.fk_erp_articulos+'\', \''+art.precio+'\', \''+art.cantidad+'\')" class="list-group-item">Empresa: '+art.fk_erp_empresas+' | Artículo: '+ art.fk_erp_articulos +'</button><button type="button"> <a href="javascript:borrarArti(\''+art.id+'\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> BORRAR</a></button>');
 			//erpCenNow('+art.id+', '+art.fk_erp_empresas+', '+art.fk_erp_articulos+', '+art.precio+');
             }
 	}	
@@ -1235,8 +1236,7 @@ function progressBar(porcentaje, totalRegistros){
             $("#estadoSync").hide();
             //alert('Pedido centralizado con éxito.');
 			navigator.notification.alert('Pedido centralizado con éxito.', alertDismissed, 'Pedidos Mobile', 'Listo');
-			
-			
+						
             deleteArticulos();
         } else
         {
@@ -1338,3 +1338,145 @@ function progressBar(porcentaje, totalRegistros){
         }
 		*/
 	}
+
+
+
+
+
+function sendAllCar(){
+	db.transaction(syncArtCar, errorDB);
+}
+function syncArtCar(tx){
+	tx.executeSql('select * from erp_mig_ped', [], syncArtSuccessCar, errorDB);
+}
+
+function syncArtSuccessCar(tx, results){
+	console.log("Recibidos de la base de datos erp_mig_ped " + results.rows.length + " registros");
+	if(results.rows.length == 0){
+		console.log("La tabla erp_mig_ped está vacía.");
+		navigator.notification.alert("No hay pedido guardados off line para centralizar.");
+	}else{
+		var contenido =[];
+		myArrClone = [];
+		for(var i=0; i<results.rows.length; i++){
+			var art = results.rows.item(i);
+			contenido[i]=(art.fk_erp_empresas, art.fk_erp_articulos, art.precio, art.cantidad);
+myArrClone.push({"Datos":{"id":art.id,"empresa":art.fk_erp_empresas, "articulo":art.fk_erp_articulos,"cantidad":art.cantidad,"precio":art.precio}});
+            }
+			var myJsonString = JSON.stringify(myArrClone);
+
+			EnvioTodoCar(myJsonString);
+	}	
+}
+
+
+
+function EnvioTodoCar(j){
+	$("#jsonPed").html('');
+	$("#estadoSync").show();
+
+						var j;
+						var WebService = window.localStorage.getItem("ws");
+						var BaseDeDatos = window.localStorage.getItem("bd");
+						var Usuario = window.localStorage.getItem("user");
+						var Clave = window.localStorage.getItem("password");
+$.getJSON("http://leocondori.com.ar/app/local/itssyncall.php", { datos: j, ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave }, resultSyncCar, "json");
+						}
+
+    //FUCIONES      
+    function resultSyncCar(respuesta)
+    {
+
+		$("#estadoSync").hide();
+        if (respuesta.ItsLoginResult == 0){
+			//navigator.notification.alert('Pedido centralizado con éxito.' + respuesta.datos);
+			navigator.notification.alert('Pedido centralizados con éxito: ' + respuesta.Cantidad);
+			deleteFromAll();
+        }else{
+			navigator.notification.alert('Existió un error: ' + respuesta.motivo);
+        }
+    }
+
+
+	function deleteAllCar(){
+		navigator.notification.confirm(
+			'Estás seguro que querés borrar todos los pedidos guardados?', // message
+			onConfirman,            // callback to invoke with index of button pressed
+			'Pedidos Mobile',           // title
+			['Si','Cancelar']     // buttonLabels
+		);
+	}
+
+
+	function onConfirman(buttonIndex) {
+    	//alert('You selected button ' + buttonIndex);
+		if(buttonIndex==1){
+			deleteFromAll();
+		}
+		/*
+		else{
+			alert('You selected button ' + buttonIndex);
+		}
+		*/
+	}
+
+		function deleteFromAll(){	
+			var dbd = window.openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
+			dbd.transaction(function(tx) {
+			tx.executeSql("delete from erp_mig_ped");
+			}, errorIdCBAll, successIdCBAll);
+
+		}	
+		function errorIdCBAll(err){
+			window.notification.alert("Error procesando SQL: " + err.code + '-' + err.message);
+		}
+
+		function successIdCBAll(){
+			navigator.notification.alert('¡Depuramos la base con éxito!');
+			syncPrepare();
+		}
+
+
+
+function borrarArti(art){
+	var art;
+
+		navigator.notification.confirm(
+			'Estás seguro que querés borrar el ítem seleccionado?', // message
+			onConfirmarse,            // callback to invoke with index of button pressed
+			'Pedidos Mobile',           // title
+			['Si','Cancelar']     // buttonLabels
+		);
+
+
+	function onConfirmarse(buttonIndex) {
+				//alert('You selected button ' + buttonIndex);
+				if(buttonIndex==1){
+					//alert('Voy a borrar el ID ' + art);
+					resetArticulos();
+
+				function resetArticulos(){	
+					var dbd = window.openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
+					dbd.transaction(function(tx) {
+					tx.executeSql("delete from erp_mig_ped where id='"+ art +"' ");
+					}, errorIdCB, successIdCB);
+
+				}	
+				function errorIdCB(err){
+					window.notification.alert("Error procesando SQL: " + err.code + '-' + err.message);
+				}
+
+				function successIdCB(){
+					navigator.notification.alert('¡Item eliminado con éxito!');
+					syncPrepare();
+				}
+
+		}
+		/*
+		else{
+			alert('You selected button ' + buttonIndex);
+		}
+		*/
+	}
+
+}
