@@ -129,7 +129,7 @@ function onVolumeDownKeyDown()
 {
 	//navigator.notification.alert('Su versión actual es la 2.8.14');
 	navigator.notification.alert(
-    'Su versión actual es la 2.8.15',  // message
+    'Su versión actual es la 2.8.16',  // message
     alertDismissed,         // callback
     'Versión',            // title
     'De acuerdo'                  // buttonName
