@@ -46,11 +46,11 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
-        app.receivedEvent('deviceready');	
-		
+        app.receivedEvent('deviceready');
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
+		
        /* var parentElement = document.getElementById(id);
         var listeningElement = parentElement.querySelector('.listening');
         var receivedElement = parentElement.querySelector('.received');
@@ -67,6 +67,7 @@ var app = {
 			window.localStorage.setItem('UUID', device.uuid);
 		}
 		//window.localStorage.setItem("existe_db", 0);
+
 		onDeviceReadyNow();
     }
 };
@@ -85,6 +86,7 @@ function mkLog(text){
 
 
 function onDeviceReadyNow(){
+
 	//window.notification.navigator.notification.alert('Arranco la App');
     mkLog("Ejecute el onDeviceReady--->");
 	window.localStorage.setItem("total", total);
@@ -100,13 +102,47 @@ function onDeviceReadyNow(){
 		mkLog("la BD está definida");
 		cargaDatos();
 	}
+
+	
 	//Habilita la función del botón atrás.
 	document.addEventListener("backbutton", onBackKeyDown, false);	
+    
 	//Habilita la función del botón menú.
-	document.addEventListener("menubutton", onMenuKeyDown, false);	
+	document.addEventListener("menubutton", onVolumeDownKeyDown, false);
+
+	document.addEventListener("volumedownbutton", onVolumeDownKeyDown, false);
+	
+	//document.addEventListener("volumeupbutton", onVolumeUpKeyDown, false);
+
+	
 	//Depuro los pedidos para migrar
 	depuraIniDatos();
 }//Fin OnReadyDevice
+
+
+function alertDismissed() {
+    // do something
+}
+
+
+function onVolumeDownKeyDown()
+{
+	//navigator.notification.alert('Su versión actual es la 2.8.14');
+	navigator.notification.alert(
+    'Su versión actual es la 2.8.15',  // message
+    alertDismissed,         // callback
+    'Versión',            // title
+    'De acuerdo'                  // buttonName
+);
+}
+function onMenuKeyDownDos()
+{
+alert("onMenuKeyDown2 pressed");
+}
+function onVolumeUpKeyDown()
+{
+alert("Volume Up button pressed");
+}
 
 	$(document).ready(function(){
 
@@ -491,19 +527,21 @@ function Vermenu(){
 	
 }
 
-// Función activada. Botón Menú.
-function onMenuKeyDown() {
-	//navigator.notification.alert('No hay opciones de menu disponible por el momento');
-    show_hidden('menufooter');
-    }
-
 function onBackKeyDown() {
             if( confirm("Realmente desea salir de la aplicación? Para navegar por esta app utilice los enlaces internos.") )
             {
                   navigator.app.exitApp();
             }
 		}
-		
+
+// Función activada. Botón Menú.
+function onMenuKeyDown() {
+            if( confirm("Realmentewwwwwww desea salir de la aplicación? Para navegar por esta app utilice los enlaces internos.") )
+            {
+                  navigator.app.exitApp();
+            }
+ }
+
 function checkConnection() {
             var networkState = navigator.connection.type;
 
@@ -879,8 +917,10 @@ function searchEmpSuccess(tx, results){
 //Función que limpia el buscador de empresas
 function CleanerSearchEmp(){
 	//Oculto la sección.
-	$("#googleEmp").hide();
+	//$("#googleEmp").hide();
 	//Limpio los resultados.
+	//$("#searchclient").empty();
+	$("#searchclient").val("");
 	$("#erpempresassearch").html('');
 }
 
