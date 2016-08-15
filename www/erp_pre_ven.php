@@ -33,7 +33,7 @@ $client = new nusoap_client($ws,true);
 					echo json_encode(array("ItsLoginResult"=>$error, "motivo"=>$err));
 				}else{
 					//echo json_encode(array("ItsLoginResult"=>$error, "session"=>$session));
-				$empresas = $client->call('ItsGetData', array('UserSession' => $session, 'ItsClassName' => 'ERP_PRE_VEN', 'RecordCount' => '-1', 'SQLFilter'=>"FEC_ULT_ACT > '".$fua."'" , 'SQLSort'=> '') );
+				$empresas = $client->call('ItsGetData', array('UserSession' => $session, 'ItsClassName' => '_ERP_PRE_VEN_APP', 'RecordCount' => '-1', 'SQLFilter'=>"FEC_ULT_ACT > '".$fua."'" , 'SQLSort'=> '') );
 				$ItsGetDataResult = $empresas["ItsGetDataResult"];
 				$DataEmpresas = $empresas["XMLData"];
 
@@ -50,13 +50,13 @@ $client = new nusoap_client($ws,true);
 								if($count==''){$counts=0;} 
 								for ($i=0; $i<sizeof($langs); $i++) {							
 if($count == 1){
-									$cadena = $langs['@attributes']['DES_ART'];
+									$cadena = $langs['@attributes']['DES_ART'];//FK_ERP_LIS_PRECIO
 									$des_art = str_replace("'", "", $cadena);	
-$datos = array('ID'=>$langs['@attributes']['ID'],'FK_ERP_ARTICULOS'=>$langs['@attributes']['FK_ERP_ARTICULOS'],'DES_ART'=>$des_art,'PRECIO'=>$langs['@attributes']['PRECIO'] );
+$datos = array('ID'=>$langs['@attributes']['ID'],'FK_ERP_ARTICULOS'=>$langs['@attributes']['FK_ERP_ARTICULOS'],'DES_ART'=>$des_art,'FK_ERP_LIS_PRECIO'=>$langs['@attributes']['FK_ERP_LIS_PRECIO'], 'SAL_DISP'=>$langs['@attributes']['SAL_DISP'], 'PRECIO'=>$langs['@attributes']['PRECIO'] );
 }else{
 									$cadena = $langs[$i]['@attributes']['DES_ART'];
 									$des_art = str_replace("'", "", $cadena);
-$datos = array('ID'=>$langs[$i]['@attributes']['ID'],'FK_ERP_ARTICULOS'=>$langs[$i]['@attributes']['FK_ERP_ARTICULOS'],'DES_ART'=>$des_art,'PRECIO'=>$langs[$i]['@attributes']['PRECIO'] );
+$datos = array('ID'=>$langs[$i]['@attributes']['ID'],'FK_ERP_ARTICULOS'=>$langs[$i]['@attributes']['FK_ERP_ARTICULOS'],'DES_ART'=>$des_art, 'FK_ERP_LIS_PRECIO'=>$langs[$i]['@attributes']['FK_ERP_LIS_PRECIO'], 'SAL_DISP'=>$langs[$i]['@attributes']['SAL_DISP'], 'PRECIO'=>$langs[$i]['@attributes']['PRECIO'] );
 }									
 								$salida[] = $datos;
 								}

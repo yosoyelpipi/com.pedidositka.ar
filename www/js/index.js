@@ -129,7 +129,7 @@ function onVolumeDownKeyDown()
 {
 	//navigator.notification.alert('Su versión actual es la 2.8.14');
 	navigator.notification.alert(
-    'Su versión actual es la 2.8.16',  // message
+    'Su versión actual es la 2.8.17 y versión de producto 2.8.4',  // message
     alertDismissed,         // callback
     'Versión',            // title
     'De acuerdo'                  // buttonName
@@ -213,7 +213,7 @@ alert("Volume Up button pressed");
 			console.log("Error procesando SQL:" + err.code);
 			//navigator.notification.alert("Error procesando SQL:" + err.code);
 			//alert("Error procesando SQL:" + err.code + '-' + err.message);
-			navigator.notification.alert("Error procesando SQL:" + err.code + '-' + err.message, alertDismissed, 'Pedidos Mobile', 'Listo');
+			navigator.notification.alert("Error procesando SQL: (errorCB)" + err.code + '-' + err.message, alertDismissed, 'Pedidos Mobile', 'Listo');
 		}
 
 		function errorCBart(err){
@@ -286,11 +286,11 @@ alert("Volume Up button pressed");
 		function crearEmpresa(tx){
 								$("#progressbars").show();
 								for(var x=0; x<Response.Data.length; x++) {
-										  console.log("INSERT INTO erp_empresas (id, descripcion, te, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["NUM_DOC"]+"' ) ");
+										  console.log("INSERT INTO erp_empresas (id, descripcion, te, fk_erp_lis_pre, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["FK_ERP_LIS_PRECIO"]+"', '"+Response.Data[x]["NUM_DOC"]+"' ) ");
 										//tx.executeSql("INSERT INTO erp_empresas (id, descripcion, te, saldo, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["SALDO"]+"', '"+Response.Data[x]["NUM_DOC"]+"') ");
 										var c = Response.Data.length;
 										//alert('Hola soy la cantidad total' + Response.Data.length);
-										tx.executeSql("INSERT INTO erp_empresas (id, descripcion, te, saldo, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["SALDO"]+"', '"+Response.Data[x]["NUM_DOC"]+"') ", [], function queryLMCSuccess(c){
+										tx.executeSql("INSERT INTO erp_empresas (id, descripcion, te, fk_erp_lis_pre, saldo, num_doc) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["DESCRIPCION"]+"', '"+Response.Data[x]["TE"]+"', '"+Response.Data[x]["FK_ERP_LIS_PRECIO"]+"', '"+Response.Data[x]["SALDO"]+"', '"+Response.Data[x]["NUM_DOC"]+"') ", [], function queryLMCSuccess(c){
 	var incremento = inicio++;
 	calculaPorcentaje(x, incremento);
 										}, errorLCCB );										
@@ -339,8 +339,8 @@ alert("Volume Up button pressed");
 								$("#progressbars").show();
 								for(x=0; x<Response.Data.length; x++){																		
 										var c = Response.Data.length;
-										console.log("INSERT INTO erp_pre_ven (id, fk_erp_articulos, des_art, saldo, precio) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["FK_ERP_ARTICULOS"]+"', '"+Response.Data[x]["DES_ART"]+"', '"+Response.Data[x]["SAL_DISP"]+"', "+Response.Data[x]["PRECIO"]+") ");
-										tx.executeSql("INSERT INTO erp_pre_ven (id, fk_erp_articulos, des_art, saldo, precio) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["FK_ERP_ARTICULOS"]+"', '"+Response.Data[x]["DES_ART"]+"', '"+Response.Data[x]["SAL_DISP"]+"', "+Response.Data[x]["PRECIO"]+") ", [], function queryLCSuccess(c){
+console.log("INSERT INTO erp_pre_ven (id, fk_erp_articulos, des_art, fk_erp_lis_pre, saldo, precio) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["FK_ERP_ARTICULOS"]+"', '"+Response.Data[x]["DES_ART"]+"', '"+Response.Data[x]["FK_ERP_LIS_PRECIO"]+"', '"+Response.Data[x]["SAL_DISP"]+"', "+Response.Data[x]["PRECIO"]+") ");
+tx.executeSql("INSERT INTO erp_pre_ven (id, fk_erp_articulos, des_art, fk_erp_lis_pre, saldo, precio) VALUES ('"+Response.Data[x]["ID"]+"', '"+Response.Data[x]["FK_ERP_ARTICULOS"]+"', '"+Response.Data[x]["DES_ART"]+"', '"+Response.Data[x]["FK_ERP_LIS_PRECIO"]+"', '"+Response.Data[x]["SAL_DISP"]+"', "+Response.Data[x]["PRECIO"]+") ", [], function queryLCSuccess(c){
 	var incremento = inicio++;
 	calculaPorcentaje(x, incremento);
 										}, errorLCCB );
@@ -592,6 +592,7 @@ function creaNuevaDB(tx){
 		  		   "id VARCHAR(50) PRIMARY KEY, " +
 		    	   "descripcion VARCHAR(100)," +
 				   "te VARCHAR(30)," +
+				   "fk_erp_lis_pre VARCHAR(30)," +
 				   "saldo VARCHAR(15)," +
 		           "num_doc VARCHAR(13) )";			   
 	tx.executeSql(empresas);
@@ -604,6 +605,7 @@ function creaNuevaDB(tx){
 		    	   "fk_erp_articulos VARCHAR(50)," +
 		    	   "des_art VARCHAR(40)," +
 				   "saldo VARCHAR(10)," +
+				   "fk_erp_lis_pre VARCHAR(30)," +
 		           "precio NUMERIC(10,4) )";
 	tx.executeSql(precios);
 	console.log('Creé la tabla erp_pre_ven');
@@ -632,7 +634,7 @@ function crearSuccess(){
 
 function errorDB(err){
 	mkLog("Error procesando SQL:" + err.message);
-	navigator.notification.alert("Error procesando SQL:" + err.message, alertDismissed, 'Pedidos Mobile', 'Listo');
+	navigator.notification.alert("Error procesando SQL (errorDB! Linea 635):" + err.message, alertDismissed, 'Pedidos Mobile', 'Listo');
 }
 
 /*
@@ -711,6 +713,7 @@ $(function() {
 
 
 function cargaArticulos(){
+	db = window.openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
 	db.transaction(cargaArt, errorDB);
 }
 
@@ -821,18 +824,24 @@ BUSCAR ARTICULOS
 */
 
 function searchArticulos(){
+	db = window.openDatabase("ERPITRIS", "1.0", "Pedidos Offline", 200000);
 	db.transaction(searchArt, errorDB);
 }
 function searchArt(tx){
 	var search = $("#searchart").val();
 	
 	if(!search){
-		navigator.notification.alert('Tenés que ingresar un artículo para iniciar la búsqueda', alertDismissed, 'Pedidos Mobile', 'Listo');
+		navigator.notification.alert('Tenés que ingresar un artículo para iniciar la búsqueda!', alertDismissed, 'Pedidos Mobile', 'Listo');
 		return;
 	}
 	
 	console.log("Cargando pedidos::: "+search+" :::de la base de datos.");
-	tx.executeSql('select * from erp_pre_ven where fk_erp_articulos like(\'%'+ search +'%\') or des_art like(\'%'+ search +'%\') ', [], searchArtSuccess, errorDB);
+	//Obtengo el número de lista de precio que tiene el cliente y lo filtro en los resultados
+	var listaSel = window.localStorage.getItem('lisPrecio');
+	var listaSele = listaSel.trim();
+	//alert(listaSele);
+	tx.executeSql('select * from erp_pre_ven where fk_erp_lis_pre = "'+listaSele+'" and (fk_erp_articulos like "%'+search+'%" or des_art like "%'+search+'%") ', [], searchArtSuccess, errorDB);
+	  console.log('select * from erp_pre_ven where fk_erp_lis_pre = "'+listaSele+'" and (fk_erp_articulos like "%'+search+'%" or des_art like "%'+search+'%") ', [], searchArtSuccess, errorDB);
 }
 function searchArtSuccess(tx, results){
 	if(results.rows.length == 0){
@@ -856,7 +865,7 @@ function searchArtSuccess(tx, results){
 				console.log('Encontre esto: ' + artresult.fk_erp_articulos);
 				
 				//Imprimo los resultados encontrados.
-				$("#erpdetarticulossearch").append('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><button type="button" onclick="clickMeArtNonCant(\' '+ artresult.fk_erp_articulos + ' \', \' '+ artresult.des_art +' \', \' '+ artresult.precio + '\' )";  class="list-group-item" >'+ artresult.fk_erp_articulos +' - '+ artresult.des_art +' <span class="badge">$ '+ artresult.precio +'</span> | <span class="badge">Saldo: '+ artresult.saldo +'</span></button>');
+				$("#erpdetarticulossearch").append('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><button type="button" onclick="clickMeArtNonCant(\' '+ artresult.fk_erp_articulos + ' \', \' '+ artresult.des_art +' \', \' '+ artresult.precio + '\' )";  class="list-group-item" >'+ artresult.fk_erp_articulos +' - '+ artresult.des_art + ' <span class="badge">$ '+ artresult.precio +'</span> | <span class="badge">Saldo: '+ artresult.saldo +'</span></button>');
 			}
 	}	
 }
@@ -909,7 +918,7 @@ function searchEmpSuccess(tx, results){
 				console.log('Encontre esto: ' + empresult.descripcion);
 				
 				//Imprimo los resultados encontrados.
-				$("#erpempresassearch").append('<button type="button" onclick="clickMeEmp(\' '+ empresult.id + ' \', \' '+ empresult.descripcion +' \', \' '+ empresult.te + '\', \' '+ empresult.num_doc + ' \');" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> '+ empresult.id +' - '+ empresult.descripcion +' ['+ empresult.num_doc +'] | ['+ empresult.te +'] | <span class="label label-info"> Saldo C/C $'+ empresult.saldo +'</span></button>');
+				$("#erpempresassearch").append('<button type="button" onclick="clickMeEmp(\' '+ empresult.id + ' \', \' '+ empresult.descripcion +' \', \' '+ empresult.te + '\', \' '+ empresult.fk_erp_lis_pre + '\', \' '+ empresult.num_doc + ' \');" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> '+ empresult.id +' - '+ empresult.descripcion +' ['+ empresult.num_doc +'] | ['+ empresult.te +'] | <span class="label label-info"> Saldo C/C $'+ empresult.saldo +'</span></button>');
 			}
 	}	
 }
@@ -924,11 +933,17 @@ function CleanerSearchEmp(){
 	$("#erpempresassearch").html('');
 }
 
-function clickMeEmp(idd, description, tel, numdoc){
+function clickMeEmp(idd, description, tel, fk_erp_lis_pre, numdoc){
 	var idd;
 	var description;
 	var tel;
+	var fk_erp_lis_pre;
 	var numdoc;
+	//Marco la lista de precio que tiene asociada el cliente.
+	window.localStorage.setItem('lisPrecio',fk_erp_lis_pre);
+	//alert(fk_erp_lis_pre);
+	console.log('Esta es la lista de precios del cliente seleccionado para el pedido: ' + fk_erp_lis_pre);
+
 	//Falta agregar los campos y navigator.notification.alertar al usuario.
 	$("#em").html(idd);
 	$("#rz").html(description);

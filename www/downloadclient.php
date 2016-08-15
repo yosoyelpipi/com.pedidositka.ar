@@ -34,7 +34,7 @@ $client = new nusoap_client($ws,true);
 				}else{
 					//echo json_encode(array("ItsLoginResult"=>$error, "session"=>$session));
 				//$empresas = $client->call('ItsGetData', array('UserSession' => $session, 'ItsClassName' => 'ERP_EMPRESAS', 'RecordCount' => '-1', 'SQLFilter'=>"FEC_ULT_ACT > '".$fua."' and _ERP_HAB_MOBILE = 1 " , 'SQLSort'=> '') );
-				$empresas = $client->call('ItsGetData', array('UserSession' => $session, 'ItsClassName' => 'ERP_EMPRESAS', 'RecordCount' => '-1', 'SQLFilter'=>"FEC_ULT_ACT > '".$fua."' and _ERP_HAB_MOBILE = 1 " , 'SQLSort'=> '') );
+				$empresas = $client->call('ItsGetData', array('UserSession' => $session, 'ItsClassName' => '_ERP_EMPRESA_MOBILE', 'RecordCount' => '-1', 'SQLFilter'=>"FEC_ULT_ACT > '".$fua."' " , 'SQLSort'=> '') );
 				$ItsGetDataResult = $empresas["ItsGetDataResult"];
 				$DataEmpresas = $empresas["XMLData"];
 
@@ -51,9 +51,9 @@ $client = new nusoap_client($ws,true);
 								if($count==''){$counts=0;}
 								for ($i=0; $i<sizeof($langs); $i++) {
 if($count == 1){
-$datos = array('ID'=>$langs['@attributes']['ID'],'DESCRIPCION'=>$langs['@attributes']['DESCRIPCION'],'TE'=>$langs['@attributes']['TE'],'NUM_DOC'=>$langs['@attributes']['NUM_DOC'], 'SALDO'=>round($langs['@attributes']['_SALDOS'], 2) );
+$datos = array('ID'=>$langs['@attributes']['ID'],'DESCRIPCION'=>$langs['@attributes']['DESCRIPCION'],'TE'=>$langs['@attributes']['TE'],'NUM_DOC'=>$langs['@attributes']['NUM_DOC'],'FK_ERP_LIS_PRECIO'=>$langs['@attributes']['FK_ERP_LIS_PRECIO'],  'SALDO'=>round($langs['@attributes']['_SALDOS'], 2) );
 }else{
-$datos = array('ID'=>$langs[$i]['@attributes']['ID'],'DESCRIPCION'=>$langs[$i]['@attributes']['DESCRIPCION'],'TE'=>$langs[$i]['@attributes']['TE'],'NUM_DOC'=>$langs[$i]['@attributes']['NUM_DOC'], 'SALDO'=>round($langs[$i]['@attributes']['_SALDOS'], 2) );
+$datos = array('ID'=>$langs[$i]['@attributes']['ID'],'DESCRIPCION'=>$langs[$i]['@attributes']['DESCRIPCION'],'TE'=>$langs[$i]['@attributes']['TE'],'NUM_DOC'=>$langs[$i]['@attributes']['NUM_DOC'], 'FK_ERP_LIS_PRECIO'=>$langs[$i]['@attributes']['FK_ERP_LIS_PRECIO'], 'SALDO'=>round($langs[$i]['@attributes']['_SALDOS'], 2) );
 }									
 									$salida[] = $datos;
 								}
