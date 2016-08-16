@@ -129,7 +129,7 @@ function onVolumeDownKeyDown()
 {
 	//navigator.notification.alert('Su versión actual es la 2.8.14');
 	navigator.notification.alert(
-    'Su versión actual es la 2.8.17 y versión de producto 2.8.4',  // message
+    'Su versión actual es la 2.8.18 y versión de producto 2.8.4',  // message
     alertDismissed,         // callback
     'Versión',            // title
     'De acuerdo'                  // buttonName
@@ -1410,6 +1410,7 @@ function syncArtCar(tx){
 var instancia = 0;
 var toti = 0;
 
+//CONTADOR/////////////////////////////////////////////////////////////////////////////////
 function cont(){
 	db.transaction(countar, errorDB);
 }
@@ -1431,6 +1432,7 @@ function syncArtSuccessCount(tx, resultado){
 function errorDBCount(){
 	alert('Error al querer contar los resultados');
 }
+//FIN CONTADOR//////////////////////////////////////////////////////////////////////////////
 
 function syncArtSuccessCar(tx, results){
 	console.log("Recibidos de la base de datos erp_mig_ped " + results.rows.length + " registros");
@@ -1462,7 +1464,7 @@ function EnvioTodoCar(j){
 
 	
 	var total = ini++; 
-	$("#jsonPed").html('Procesando ' + total + ' registro de ' + window.localStorage.getItem('Toti'));
+	$("#jsonPed").html('Procesando ' + total + ' registro/s de ' + window.localStorage.getItem('Toti'));
 
 	$("#estadoSync").show();
 
@@ -1491,6 +1493,7 @@ $.getJSON("http://leocondori.com.ar/app/local/itssyncall.php", { datos: j, ws: W
 				deleteFromAll(respuesta.idinsertado);
 			}else{
 				navigator.notification.alert('Existió un error: ' + respuesta.Msg);
+				location.reload();
 			}
         }
     }
