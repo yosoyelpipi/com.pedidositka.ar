@@ -156,11 +156,11 @@ alert("Volume Up button pressed");
 						var url = 'http://iserver.itris.com.ar:3000/ITSWS/ItsCliSvrWS.asmx?WSDL';
 						var url = window.localStorage.getItem("ws");
 						$("#estado").show();
-						$.getJSON("http://leocondori.com.ar/app/local/testws.php", {ws: url, precio: 20}, resultConn, "json");
+						$.getJSON("http://itris.no-ip.com:85/app/pos/testws.php", {ws: url, precio: 20}, resultConn, "json");
 						})
 					$("#testlogin").click(function(){
 					$("#estado").show();		
-						$.getJSON("http://leocondori.com.ar/app/local/itslogin.php", {ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave}, ItsLogin, "json");
+						$.getJSON("http://itris.no-ip.com:85/app/pos/itslogin.php", {ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave}, ItsLogin, "json");
 					})
 
 		//Sincronizo clientes:			
@@ -179,7 +179,7 @@ alert("Volume Up button pressed");
 					}else{
 						var fec_ult_act_cli = fua_cli;
 					}
-						$.getJSON("http://leocondori.com.ar/app/local/downloadclient.php", {ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave, fua_cliente: fec_ult_act_cli}, ItsDownloadClient, "json");
+						$.getJSON("http://itris.no-ip.com:85/app/pos/downloadclient.php", {ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave, fua_cliente: fec_ult_act_cli}, ItsDownloadClient, "json");
 					});
 		//FIN: Sincronizo clientes
 
@@ -198,7 +198,7 @@ alert("Volume Up button pressed");
 					}else{
 						var fec_ult_act_pre = fua_precios;
 					}
-						$.getJSON("http://leocondori.com.ar/app/local/erp_pre_ven.php", {ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave, fua_pre: fec_ult_act_pre}, ItsErpPreVen, "json");
+						$.getJSON("http://itris.no-ip.com:85/app/pos/erp_pre_ven.php", {ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave, fua_pre: fec_ult_act_pre}, ItsErpPreVen, "json");
 					});
 		//FIN: Sincronizar listas de precios.
 
@@ -1178,7 +1178,7 @@ function syncArtSuccess(tx, results){
 			contenido[i]=(art.fk_erp_empresas, art.fk_erp_articulos, art.precio, art.cantidad);
 			//navigator.notification.alert(contenido);
 			//$("#jsonPed").append(art.fk_erp_empresas, art.fk_erp_articulos, art.precio);
-			$("#jsonPed").append('<button type="button" id="paraCen" onclick="erpCenNow(\''+art.id+'\', \''+art.fk_erp_empresas+'\', \''+art.fk_erp_articulos+'\', \''+art.precio+'\', \''+art.cantidad+'\')" class="list-group-item">Empresa: '+art.fk_erp_empresas+' | Artículo: '+ art.fk_erp_articulos +'</button><button type="button"> <a href="javascript:borrarArti(\''+art.id+'\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> BORRAR</a></button>');
+			$("#jsonPed").append('<button type="button" id="paraCen" onclick="erpCenNow(\''+art.id+'\', \''+art.fk_erp_empresas+'\', \''+art.fk_erp_articulos+'\', \''+art.precio+'\', \''+art.cantidad+'\')" class="list-group-item">Empresa: '+art.fk_erp_empresas+' | Artículo: '+ art.fk_erp_articulos +' | Precio: '+ art.precio +' | Cantidad: '+ art.cantidad +'</button><button type="button"> <a href="javascript:borrarArti(\''+art.id+'\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> BORRAR</a></button>');
 			//erpCenNow('+art.id+', '+art.fk_erp_empresas+', '+art.fk_erp_articulos+', '+art.precio+');
             }
 	}	
@@ -1283,7 +1283,7 @@ function progressBar(porcentaje, totalRegistros){
         var Usuario = window.localStorage.getItem("user");
         var Clave = window.localStorage.getItem("password");
 		//alert('Esta es la cantidad: ' + cc);
-        $.getJSON("http://leocondori.com.ar/app/local/itssync.php", { id: ii, empresa: ee, articulo: aa, precio: pp, cantidad: cc, ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave }, resultSync, "json");
+        $.getJSON("http://itris.no-ip.com:85/app/pos/itssync.php", { id: ii, empresa: ee, articulo: aa, precio: pp, cantidad: cc, ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave }, resultSync, "json");
     }
 
     //FUCIONES      
@@ -1473,7 +1473,7 @@ function EnvioTodoCar(j){
 						var BaseDeDatos = window.localStorage.getItem("bd");
 						var Usuario = window.localStorage.getItem("user");
 						var Clave = window.localStorage.getItem("password");
-$.getJSON("http://leocondori.com.ar/app/local/itssyncall.php", { datos: j, ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave }, resultSyncCar, "json");
+$.getJSON("http://itris.no-ip.com:85/app/pos/itssyncall.php", { datos: j, ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave }, resultSyncCar, "json");
 						}
 
     //FUNCIONES      
@@ -1602,3 +1602,70 @@ function borrarArti(art){
 	}
 
 }
+
+
+
+function ItsSendMail(){
+	db.transaction(syncArtCarMail, errorDB);
+}
+function syncArtCarMail(tx){
+	tx.executeSql('select * from erp_mig_ped', [], syncArtSuccessCarMail, errorDB);	
+}
+
+function syncArtSuccessCarMail(tx, results){
+	console.log("Recibidos de la base de datos erp_mig_ped " + results.rows.length + " registros");
+	if(results.rows.length == 0){
+		console.log("La tabla erp_mig_ped está vacía.");
+		navigator.notification.alert("No hay pedido guardados off line para centralizar.");
+	}else{
+		var contenido =[];
+		myArrClone = [];
+		for(var i=0; i<results.rows.length; i++){
+			var art = results.rows.item(i);
+			//contenido[i]=(art.fk_erp_empresas,art.fk_erp_articulos,art.precio,art.cantidad);
+			//console.log('Este es articulos:_' + art.fk_erp_articulos);
+			var iduu = window.localStorage.getItem('UUID');
+myArrClone.push({"Datos":{"uuid": iduu, "id":art.id,"empresa":art.fk_erp_empresas, "articulo":art.fk_erp_articulos,"cantidad":art.cantidad,"precio":art.precio}});
+            }
+			var myJsonString = JSON.stringify(myArrClone);
+
+			EnvioTodoCarMail(myJsonString);
+	}	
+}
+
+
+function EnvioTodoCarMail(j){
+
+						$("#estadoSync").show();
+
+						var j;
+						var WebService = window.localStorage.getItem("ws");
+						var BaseDeDatos = window.localStorage.getItem("bd");
+						var Usuario = window.localStorage.getItem("user");
+						var Clave = window.localStorage.getItem("password");
+$.getJSON("http://itris.no-ip.com:85/app/pos/itssyncallMail.php", { datos: j, ws: WebService, base: BaseDeDatos, usuario: Usuario, pass: Clave }, resultSyncCarMail, "json");
+						}
+
+    //FUNCIONES      
+    function resultSyncCarMail(respuesta)
+    {
+        
+		$("#estadoSync").hide();
+        if (respuesta.ItsLoginResult == 0){
+			//navigator.notification.alert('Pedido centralizado con éxito.' + respuesta.datos);
+			//navigator.notification.alert('Pedido centralizados con éxito: ' + respuesta.Cantidad);
+			alert('Correo enviado con éxito');
+			//deleteFromAll(respuesta.idinsertado);
+
+        }else{
+			alert('Correo con errores');
+				/*
+					if(respuesta.Msg == "El artículo ya fue informado por la aplicación"){
+						deleteFromAll(respuesta.idinsertado);
+					}else{
+						navigator.notification.alert('Existió un error: ' + respuesta.Msg);
+						location.reload();
+					}
+				*/
+        }
+    }
