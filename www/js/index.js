@@ -495,6 +495,7 @@ function Vermenu(){
 		var bdS = window.localStorage.getItem("bd");
 		var userS = window.localStorage.getItem("user");
 		var passwordS = window.localStorage.getItem("password");
+		var emailparajson = window.localStorage.getItem("emailparajson");
 		//navigator.notification.alert(wsS);
 	if(!wsS){
 		mkLog("No de definió WS");
@@ -510,6 +511,14 @@ function Vermenu(){
 							  '<input type="text" class="form-control" id="user" name="user" placeholder="USER">');
 		$("#passconfig").html('<label for="pass"><small>Password</small></label>' +
 							  '<input type="password" class="form-control" id="pass" name="pass" placeholder="PASS">');
+		$("#bloqueemail").html('<label class="control-label sr-only" for="emailparajson">email</label>' +
+								'<div class="input-group">' +
+								'<span class="input-group-addon">@</span>' +
+								'<input type="text" class="form-control" id="emailparajson" aria-describedby="emailparajsonStatus">' +
+								'</div>' +
+								'<span id="helpBlock2" class="help-block">Al indicar un email usted podrá usar la opción de envio de pedidos vía mail.</span>' +
+								'<!--<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>' +
+								'<span id="emailparajsonStatus" class="sr-only">(success)</span>-->');					  
 	}else{
 		mkLog("Ya se definió el WS");
 		$("#wsconfig").html('<label for="ws"><small>Web Service</small></label>' +
@@ -520,6 +529,15 @@ function Vermenu(){
 							  '<input type="text" class="form-control" id="user" name="user" value="'+ userS +'">');
 		$("#passconfig").html('<label for="pass"><small>Password</small></label>' +
 							  '<input type="password" class="form-control" id="pass" name="pass" value="'+ passwordS +'">');
+		$("#bloqueemailconfig").html('<label class="control-label sr-only" for="emailparajson">email</label>' +
+								'<div class="input-group">' +
+								'<span class="input-group-addon">@</span>' +
+								'<input type="text" class="form-control" id="emailparajson"  value="'+ emailparajson +'" aria-describedby="emailparajsonStatus">' +
+								'</div>' +
+								'<span id="helpBlock2" class="help-block">Al indicar un email usted podrá usar la opción de envio de pedidos vía mail.</span>' +
+								'<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>' +
+								'<span id="emailparajsonStatus" class="sr-only">(success)</span>');			
+
 		$("#configurado").show();
 		$("#testeer").show();		
 	}
@@ -777,11 +795,13 @@ function submitForm(){
 	var _base = $("[name='bd']").val();
 	var _users = $("[name='user']").val();
 	var _pass = $("[name='pass']").val();
+	var eemail = $("#emailparajson").val();
 	
 	var ws = window.localStorage.setItem("ws", _webs);
 	var bd = window.localStorage.setItem("bd", _base);
 	var user = window.localStorage.setItem("user", _users);
 	var password = window.localStorage.setItem("password", _pass);
+	var password = window.localStorage.setItem("emailparajson", eemail);
 	navigator.notification.alert('Los datos se han guardado correctamente.', alertDismissed, 'Pedidos Mobile', 'Listo');
 	
 	$("#config").hide();

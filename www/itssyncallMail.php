@@ -47,7 +47,7 @@ $pass = "12348";
 */
 //http://leocondori.com.ar/app/local/itssync.php?id=777&empresa=000001178&articulo=AC-02-090&precio=4702.88
 
-    GrabarJson($datos,$ItsGetDate);
+    GrabarJson($datos,'pedidos');
     //Lo decodifico y obtengo un array.
     $String = json_decode($datos);
     

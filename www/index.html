@@ -270,11 +270,22 @@ function deleteAllTwo(){
 			<label for="pass"><small>Password</small></label>
 			<input type="password" class="form-control" id="pass" name="pass" placeholder="123456">
 		  </div>
-
+			<div class="form-group has-warning has-feedback" id="bloqueemail">
+								<label class="control-label sr-only" for="emailparajson">email</label>
+								<div class="input-group">
+								<span class="input-group-addon">@</span>
+								<input type="text" class="form-control" id="emailparajson" aria-describedby="emailparajsonStatus">
+								</div>
+								<span id="helpBlock2" class="help-block">Al indicar un email usted podrá usar la opción de envio de pedidos vía mail.</span>
+								<!--<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+								'<span id="emailparajsonStatus" class="sr-only">(success)</span>-->
+			</div>
 		  <button type="submit" id="b_guardar" class="btn btn-default"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> <small>Guardar</small></button>
 		  <!--<button type="button" class="btn btn-danger" onClick="Cleaner()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Limpiar</button>-->
 		  <!--<button class="btn btn-default" onClick="datosConexion()" type="submit">Button</button>-->
 		</form>	
+		<hr>
+		
 		<hr>		
 		<!--<button type="button" class="btn btn-primary btn-lg btn-block" onClick="ShowParam()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> limpiar</button>-->
 		<button type="button" class="btn btn-primary btn-lg btn-block" onClick="ShowMenu()"><span class="glyphicon glyphicon-backward" aria-hidden="true"></span> Volver</button>
@@ -291,6 +302,9 @@ function deleteAllTwo(){
 		  </div>
 		  <div class="form-group" id="passconfig">
 		  </div>
+			<div class="form-group has-success has-feedback" id="bloqueemailconfig">
+
+			</div>
 
 		  <!--<button type="submit" id="b_guardar" class="btn btn-default"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> <small>Guardar</small></button>-->
 		  <button type="button" class="btn btn-danger" onClick="Cleaner()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Limpiar</button>
